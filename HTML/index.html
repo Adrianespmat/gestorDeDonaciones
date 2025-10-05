@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <script src="donaciones.js"></script>
+  <script src="../JS/donaciones.js"></script>
+  <link rel="stylesheet" href="../CSS/donaciones.css">
   <title>Gestor de Donaciones</title>
 </head>
 <body>
@@ -10,14 +11,79 @@
   <h1>Donaciones Solidarias</h1>
   <p>Haz clic en las imágenes para donar a una organización</p>
 
-  
-  <div id="organizaciones"></div>
+  <!-- Contenedor de organizaciones -->
+  <div id="organizaciones">
+
+    <div class="org" onclick="donar('Unicef', 20)">
+      <img src="../Imagenes/unicef.png" alt="Unicef">
+      <p>Unicef</p>
+      <p>Aporte fijo: 20 €</p>
+    </div>
+
+    <div class="org" onclick="donar('Médicos sin fronteras', 15)">
+      <img src="../Imagenes/medicos.png" alt="Médicos sin fronteras">
+      <p>Médicos sin fronteras</p>
+      <p>Aporte fijo: 15 €</p>
+    </div>
+
+    <div class="org" onclick="donar('GreenPeace', 25)">
+      <img src="../Imagenes/greeenpeace.png" alt="GreenPeace">
+      <p>GreenPeace</p>
+      <p>Aporte fijo: 25 €</p>
+    </div>
+
+    <div class="org" onclick="donar('Cruz Roja', 10)">
+      <img src="../Imagenes/cruz roja.png" alt="Cruz Roja">
+      <p>Cruz Roja</p>
+      <p>Aporte fijo: 10 €</p>
+    </div>
+
+    <div class="org" onclick="donar('Save the Children', 30)">
+      <img src="../Imagenes/saveChildren.png" alt="Save the Children">
+      <p>Save the Children</p>
+      <p>Aporte fijo: 30 €</p>
+    </div>
+
+    <div class="org" onclick="donar('Amnistía Internacional', 12)">
+      <img src="../Imagenes/amnistia.png" alt="Amnistía Internacional">
+      <p>Amnistía Internacional</p>
+      <p>Aporte fijo: 12 €</p>
+    </div>
+
+    <div class="org" onclick="donar('WWF', 18)">
+      <img src="../Imagenes/wwf.png" alt="WWF">
+      <p>WWF</p>
+      <p>Aporte fijo: 18 €</p>
+    </div>
+
+    <div class="org" onclick="donar('ACNUR', 22)">
+      <img src="../Imagenes/acbur.png" alt="ACNUR">
+      <p>ACNUR</p>
+      <p>Aporte fijo: 22 €</p>
+    </div>
+
+    <div class="org" onclick="donar('Fundación Vicente Ferrer', 14)">
+      <img src="../Imagenes/fundacion.png" alt="Fundación Vicente Ferrer">
+      <p>Fundación Vicente Ferrer</p>
+      <p>Aporte fijo: 14 €</p>
+    </div>
+
+    <div class="org" onclick="donar('Manos Unidas', 16)">
+      <img src="../Imagenes/manosUNidads.jpg" alt="Manos Unidas">
+      <p>Manos Unidas</p>
+      <p>Aporte fijo: 16 €</p>
+    </div>
+
+  </div>
+
+  <!-- Botón para finalizar -->
   <button onclick="finalizar()">Finalizar Donaciones</button>
 
-  
+  <!-- Sección para mostrar resultados -->
   <div id="resultado">
-    <p><i>Resumen de tus donaciones...</i></p>
+    <p><i>Aquí aparecerá el resumen de tus donaciones...</i></p>
   </div>
+
 
   
 
