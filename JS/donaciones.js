@@ -5,8 +5,6 @@ function donar(nombre, aporte) {
   // Guardar la donación
   aportaciones.push(nombre);
   totalDonado += aporte;
-
-  
 }
 
 function finalizar() {
@@ -17,33 +15,37 @@ function finalizar() {
 
   // Contar aportaciones por organización
   let resumen = {};
-  for (let i = 0; i < aportaciones.length; i++) {
+  let i = 0;
+  while (i < aportaciones.length) {
     let org = aportaciones[i];
     if (resumen[org]) {
       resumen[org]++;
     } else {
       resumen[org] = 1;
     }
+    i++;
   }
 
-  // Ordenar alfabéticamente inverso
+  // Ordenar nombres alfabéticamente
   let nombresOrdenados = Object.keys(resumen).sort().reverse();
 
   // Construir texto final
   let texto = "";
-  for (let i = 0; i < nombresOrdenados.length; i++) {
-    let org = nombresOrdenados[i];
+  let j = 0;
+  while (j < nombresOrdenados.length) {
+    let org = nombresOrdenados[j];
     texto += org + " ---- " + resumen[org] + " aportaciones<br>";
+    j++;
   }
 
-  let media = (totalDonado / aportaciones.length).toFixed(2);
+  let media = (totalDonado / aportaciones.length).toFixed();
 
   texto += "<br><b>Donación final: " + totalDonado + " €</b><br>";
   texto += "<b>Donación media: " + media + " €/aportación</b>";
 
   document.getElementById("resultado").innerHTML = texto;
 
-  // Reiniciar para empezar nuevas donaciones después
+  // Reiniciar para empezar nuevas donaciones despues
   aportaciones = [];
   totalDonado = 0;
 }
