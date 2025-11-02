@@ -1,0 +1,75 @@
+{
+    "organizaciones": [
+        {
+            "id": 1,
+            "nombre": "Unicef",
+            "tipo": "personas",
+            "acogida": false,
+            "rangoEdad": "infancia"
+        },
+        {
+            "id": 2,
+            "nombre": "Médicos sin fronteras",
+            "tipo": "personas", 
+            "acogida": true,
+            "rangoEdad": "infancia"
+        },
+        {
+            "id": 3,
+            "nombre": "GreenPeace",
+            "tipo": "animales",
+            "multiraza": true,
+            "ambito": "internacional"
+        },
+        {
+            "id": 4,
+            "nombre": "Cruz Roja",
+            "tipo": "personas",
+            "acogida": true,
+            "rangoEdad": "infancia"
+        },
+        {
+            "id": 5,
+            "nombre": "Save the Children",
+            "tipo": "personas",
+            "acogida": false,
+            "rangoEdad": "infancia"
+        },
+        {
+            "id": 6,
+            "nombre": "Amnistía Internacional",
+            "tipo": "personas",
+            "acogida": false,
+            "rangoEdad": "adolescencia"
+        },
+        {
+            "id": 7,
+            "nombre": "WWF",
+            "tipo": "animales",
+            "multiraza": true,
+            "ambito": "internacional"
+        },
+        {
+            "id": 8,
+            "nombre": "ACNUR",
+            "tipo": "personas",
+            "acogida": true,
+            "rangoEdad": "infancia"
+        },
+        {
+            "id": 9,
+            "nombre": "Fundación Vicente Ferrer",
+            "tipo": "personas",
+            "acogida": false,
+            "rangoEdad": "infancia"
+        },
+        {
+            "id": 10,
+            "nombre": "Manos Unidas",
+            "tipo": "personas",
+            "acogida": true,
+            "rangoEdad": "tercera edad"
+        }
+    ],
+    "tramitesDonacion": []
+}

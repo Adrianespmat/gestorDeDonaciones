@@ -1,4 +1,4 @@
-/* Estilo general */
+
 body {
   font-family: Arial, sans-serif;
   text-align: center;
@@ -42,6 +42,46 @@ p {
   margin: 0 auto 10px auto;
 }
 
+.cantidad {
+   width: 80%;
+  padding: 5px;
+  margin-top: 5px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+#panel {
+   width: 25%;
+  background: #e8f4ff;
+  padding: 15px;
+  border-left: 2px solid darkblue;
+  height: 100vh; 
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+}
+
+#historial {
+  margin-top: 10px;
+}
+
+.linea {
+  padding: 10px;
+  margin: 5px 0;
+  border-bottom: 1px solid #ccc;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.linea-destacada {
+  background-color: #fff3cd !important;
+  border-left: 4px solid #ffc107;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
 button {
   margin: 20px;
