@@ -11,18 +11,18 @@ class GestorDonaciones {
     }
 
     cargarOrganizaciones() {
-        // Datos directos para simplificar
+
         this.organizaciones = [
-            {id: 1, nombre: "Unicef", tipo: "personas", acogida: false, rangoEdad: "infancia"},
-            {id: 2, nombre: "Médicos sin fronteras", tipo: "personas", acogida: true, rangoEdad: "infancia"},
-            {id: 3, nombre: "GreenPeace", tipo: "animales", multiraza: true, ambito: "internacional"},
-            {id: 4, nombre: "Cruz Roja", tipo: "personas", acogida: true, rangoEdad: "infancia"},
-            {id: 5, nombre: "Save the Children", tipo: "personas", acogida: false, rangoEdad: "infancia"},
-            {id: 6, nombre: "Amnistía Internacional", tipo: "personas", acogida: false, rangoEdad: "adolescencia"},
-            {id: 7, nombre: "WWF", tipo: "animales", multiraza: true, ambito: "internacional"},
-            {id: 8, nombre: "ACNUR", tipo: "personas", acogida: true, rangoEdad: "infancia"},
-            {id: 9, nombre: "Fundación Vicente Ferrer", tipo: "personas", acogida: false, rangoEdad: "infancia"},
-            {id: 10, nombre: "Manos Unidas", tipo: "personas", acogida: true, rangoEdad: "tercera edad"}
+            { id: 1, nombre: "Unicef", tipo: "personas", acogida: false, rangoEdad: "infancia" },
+            { id: 2, nombre: "Médicos sin fronteras", tipo: "personas", acogida: true, rangoEdad: "infancia" },
+            { id: 3, nombre: "GreenPeace", tipo: "animales", multiraza: true, ambito: "internacional" },
+            { id: 4, nombre: "Cruz Roja", tipo: "personas", acogida: true, rangoEdad: "infancia" },
+            { id: 5, nombre: "Save the Children", tipo: "personas", acogida: false, rangoEdad: "infancia" },
+            { id: 6, nombre: "Amnistía Internacional", tipo: "personas", acogida: false, rangoEdad: "adolescencia" },
+            { id: 7, nombre: "WWF", tipo: "animales", multiraza: true, ambito: "internacional" },
+            { id: 8, nombre: "ACNUR", tipo: "personas", acogida: true, rangoEdad: "infancia" },
+            { id: 9, nombre: "Fundación Vicente Ferrer", tipo: "personas", acogida: false, rangoEdad: "infancia" },
+            { id: 10, nombre: "Manos Unidas", tipo: "personas", acogida: true, rangoEdad: "tercera edad" }
         ];
     }
 
@@ -34,7 +34,60 @@ class GestorDonaciones {
         }
     }
 
-    
+    procesarDonacion(orgElement) {
+        const orgId = parseInt(orgElement.getAttribute('data-id'));
+        const input = orgElement.getElementsByClassName('cantidad')[0];
+        const cantidad = parseFloat(input.value);
+
+        if (isNaN(cantidad) || cantidad <= 0) {
+            alert('Introduce una cantidad mayor a 0€');
+            return;
+        }
+
+        const org = this.organizaciones.find(o => o.id === orgId);
+        this.donaciones.push({
+            orgId: orgId,
+            nombre: org.nombre,
+            cantidad: cantidad,
+            fechaHora: new Date()
+        });
+
+        this.actualizarHistorial();
+        this.resaltarLineas(orgId);
+        input.value = '';
+    }
+
+
+    actualizarHistorial() {
+        const historial = document.getElementById('historial');
+        historial.innerHTML = '';
+
+        if (this.donaciones.length === 0) {
+            historial.innerHTML = '<p><i>No hay donaciones registradas...</i></p>';
+            return;
+        }
+
+        for (let i = 0; i < this.donaciones.length; i++) {
+            const donacion = this.donaciones[i];
+            const linea = document.createElement('div');
+            linea.className = 'linea-historial';
+            linea.setAttribute('data-org', donacion.orgId);
+            linea.innerHTML = `<strong>${donacion.nombre}</strong> - ${donacion.cantidad.toFixed(2)} €`;
+            historial.appendChild(linea);
+        }
+    }
+
+
+    resaltarLineas(orgId) {
+        const lineas = document.getElementsByClassName('linea-historial');
+        for (let i = 0; i < lineas.length; i++) {
+            lineas[i].classList.remove('linea-destacada');
+            if (parseInt(lineas[i].getAttribute('data-org')) === orgId) {
+                lineas[i].classList.add('linea-destacada');
+            }
+        }
+    }
+
 
     finalizarDonaciones() {
         if (this.donaciones.length === 0) {
@@ -47,6 +100,7 @@ class GestorDonaciones {
         setTimeout(() => this.limpiarTodo(), 10000);
     }
 
+
     mostrarResumen() {
         const resumen = {};
         let total = 0;
@@ -54,7 +108,7 @@ class GestorDonaciones {
         for (let i = 0; i < this.donaciones.length; i++) {
             const donacion = this.donaciones[i];
             if (!resumen[donacion.orgId]) {
-                resumen[donacion.orgId] = {nombre: donacion.nombre, total: 0, count: 0};
+                resumen[donacion.orgId] = { nombre: donacion.nombre, total: 0, count: 0 };
             }
             resumen[donacion.orgId].total += donacion.cantidad;
             resumen[donacion.orgId].count++;
@@ -105,7 +159,7 @@ class GestorDonaciones {
         this.donaciones = [];
         document.getElementById('historial').innerHTML = '<p><i>No hay donaciones registradas</i></p>';
         document.getElementById('resultado').innerHTML = '<p><i>Aquí aparecerá el resumen de tus donaciones</i></p>';
-        
+
         const inputs = document.getElementsByClassName('cantidad');
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].value = '';
@@ -113,7 +167,7 @@ class GestorDonaciones {
     }
 }
 
-// Inicialización
+
 let gestorDonaciones;
 
 document.addEventListener('DOMContentLoaded', function() {

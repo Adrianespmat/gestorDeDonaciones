@@ -1,97 +1,101 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <script src="../JS/donaciones.js"></script>
-  <link rel="stylesheet" href="../CSS/donaciones.css">
-  <title>Gestor de Donaciones</title>
+    <meta charset="UTF-8">
+    <script src="../JS/donaciones.js"></script>
+    <link rel="stylesheet" href="../CSS/donaciones.css">
+    <title>Gestor de Donaciones</title>
 </head>
+
 <body>
 
-  <h1>Donaciones Solidarias</h1>
-  <p>Haz clic en las imágenes para donar a una organización</p>
+    <h1>Donaciones Solidarias</h1>
+    <p>Haz clic en las imágenes para donar a una organización</p>
 
-  <div id="panel-lateral">
-    <h3>Historial de donaciones</h3>
-    <div id="historial"></div>
-  </div>
 
-  
-  <div id="organizaciones">
-
-    <div class="org" data-id="1">
-      <img src="../Imagenes/unicef.png" alt="Unicef">
-      <p>Unicef</p>
-      <input type="number" placeholder="Cantidad (€)" class="cantidad">
+    <div id="panel-lateral">
+        <h3>Historial de donaciones</h3>
+        <div id="historial"></div>
     </div>
 
-    <div class="org"  data-id="2">
-      <img src="../Imagenes/medicos.png" alt="Médicos sin fronteras">
-      <p>Médicos sin fronteras</p>
-      <input type="number" placeholder="Cantidad (€)" class="cantidad">
+    <div id="organizaciones">
+
+        <div class="org" data-id="1">
+            <img src="../Imagenes/unicef.png" alt="Unicef">
+            <p>Unicef</p>
+            <input type="text" placeholder="Cantidad" class="cantidad">
+        </div>
+
+        <div class="org" data-id="2">
+            <img src="../Imagenes/medicos.png" alt="Médicos sin fronteras">
+            <p>Médicos sin fronteras</p>
+            <input type="text" placeholder="Cantidad" class="cantidad">
+        </div>
+
+        <div class="org" data-id="3">
+            <img src="../Imagenes/greeenpeace.png" alt="GreenPeace">
+            <p>GreenPeace</p>
+            <input type="text" placeholder="Cantidad" class="cantidad">
+        </div>
+
+        <div class="org" data-id="4">
+            <img src="../Imagenes/cruz roja.png" alt="Cruz Roja">
+            <p>Cruz Roja</p>
+            <input type="text" placeholder="Cantidad" class="cantidad">
+        </div>
+
+        <div class="org" data-id="5">
+            <img src="../Imagenes/saveChildren.png" alt="Save the Children">
+            <p>Save the Children</p>
+            <input type="text" placeholder="Cantidad" class="cantidad">
+        </div>
+
+        <div class="org" data-id="6">
+            <img src="../Imagenes/amnistia.png" alt="Amnistía Internacional">
+            <p>Amnistía Internacional</p>
+            <input type="text" placeholder="Cantidad" class="cantidad">
+        </div>
+
+        <div class="org" data-id="7">
+            <img src="../Imagenes/wwf.png" alt="WWF">
+            <p>WWF</p>
+            <input type="text" placeholder="Cantidad" class="cantidad">
+        </div>
+
+        <div class="org" data-id="8">
+            <img src="../Imagenes/acbur.png" alt="ACNUR">
+            <p>ACNUR</p>
+            <input type="text" placeholder="Cantidad" class="cantidad">
+        </div>
+
+        <div class="org" data-id="9">
+            <img src="../Imagenes/fundacion.png" alt="Fundación Vicente Ferrer">
+            <p>Fundación Vicente Ferrer</p>
+            <input type="text" placeholder="Cantidad" class="cantidad">
+        </div>
+
+        <div class="org" data-id="10">
+            <img src="../Imagenes/manosUNidads.jpg" alt="Manos Unidas">
+            <p>Manos Unidas</p>
+            <input type="text" placeholder="Cantidad" class="cantidad">
+        </div>
+
     </div>
 
-    <div class="org"  data-id="3">
-      <img src="../Imagenes/greeenpeace.png" alt="GreenPeace">
-      <p>GreenPeace</p>
-      <input type="number" placeholder="Cantidad (€)" class="cantidad">
+
+
+
+    <button onclick="finalizarDonaciones()">Finalizar Donaciones</button>
+
+
+    <div id="resultado">
+        <p><i>Aquí aparecerá el resumen de tus donaciones...</i></p>
     </div>
 
-    <div class="org"  data-id="4">
-      <img src="../Imagenes/cruz roja.png" alt="Cruz Roja">
-      <p>Cruz Roja</p>
-      <input type="number" placeholder="Cantidad (€)" class="cantidad">
-    </div>
-
-    <div class="org"  data-id="5">
-      <img src="../Imagenes/saveChildren.png" alt="Save the Children">
-      <p>Save the Children</p>
-      <input type="number" placeholder="Cantidad (€)" class="cantidad">
-    </div>
-
-    <div class="org"  data-id="6">
-      <img src="../Imagenes/amnistia.png" alt="Amnistía Internacional">
-      <p>Amnistía Internacional</p>
-      <input type="number" placeholder="Cantidad (€)" class="cantidad">
-    </div>
-
-    <div class="org"  data-id="7">
-      <img src="../Imagenes/wwf.png" alt="WWF">
-      <p>WWF</p>
-      <input type="number" placeholder="Cantidad (€)" class="cantidad">
-    </div>
-
-    <div class="org"  data-id="8">
-      <img src="../Imagenes/acbur.png" alt="ACNUR">
-      <p>ACNUR</p>
-      <input type="number" placeholder="Cantidad (€)" class="cantidad">
-    </div>
-
-    <div class="org"  data-id="9">
-      <img src="../Imagenes/fundacion.png" alt="Fundación Vicente Ferrer">
-      <p>Fundación Vicente Ferrer</p>
-      <input type="number" placeholder="Cantidad (€)" class="cantidad">
-    </div>
-
-    <div class="org"  data-id="10">
-      <img src="../Imagenes/manosUNidads.jpg" alt="Manos Unidas">
-      <p>Manos Unidas</p>
-      <input type="number" placeholder="Cantidad (€)" class="cantidad">
-    </div>
-
-  </div>
 
 
-  
-  <button onclick="finalizarDonaciones()">Finalizar Donaciones</button>
-
-  
-  <div id="resultado">
-    <p><i>Aquí aparecerá el resumen de tus donaciones...</i></p>
-  </div>
-
-
-  
 
 </body>
+
 </html>
