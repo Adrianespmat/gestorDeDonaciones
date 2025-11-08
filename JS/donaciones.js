@@ -63,7 +63,7 @@ class GestorDonaciones {
         historial.innerHTML = '';
 
         if (this.donaciones.length === 0) {
-            historial.innerHTML = '<p><i>No hay donaciones registradas...</i></p>';
+            historial.innerHTML = '<p>No hay donaciones registradas...</p>';
             return;
         }
 
@@ -132,33 +132,62 @@ class GestorDonaciones {
         html += `<b>Aporte medio: ${mediaGeneral.toFixed(3)} €/donación</b>`;
 
         document.getElementById('resultado').innerHTML = html;
+
+        
     }
 
     mostrarInfoOrganizaciones() {
+
+        
         const orgsIds = [];
         for (let i = 0; i < this.donaciones.length; i++) {
-            if (orgsIds.indexOf(this.donaciones[i].orgId) === -1) {
+            if (!orgsIds.includes(this.donaciones[i].orgId)) {
                 orgsIds.push(this.donaciones[i].orgId);
             }
         }
 
-        let mensaje = '';
+        let infoHTML = "";
         for (let i = 0; i < orgsIds.length; i++) {
             const org = this.organizaciones.find(o => o.id === orgsIds[i]);
-            if (org.tipo === 'personas') {
-                mensaje += `${org.nombre} trabaja con personas, está enfocada en la ${org.rangoEdad} y ${org.acogida ? 'sí' : 'no'} tramita acogidas.\n\n`;
+            const numero = `1.${i + 1}`;
+              if (org.tipo === 'personas') {
+            infoHTML += `<p><strong>${numero}. ${org.nombre}</strong> trabaja con personas, está enfocada en la ${org.rangoEdad} y ${org.acogida ? 'sí' : 'no'} tramita acogidas.</p>`;
             } else {
-                mensaje += `${org.nombre} trabaja con ${org.multiraza ? 'todo tipo de animales' : 'una sola raza'} a nivel ${org.ambito}.\n\n`;
+                const tipoAnimales = org.multiraza ? "todo tipo de animales" : "una sola raza de animales";
+            const ambito = org.ambito === "internacional" ? "mundial" : org.ambito;
+            infoHTML += `<p><strong>${numero}. ${org.nombre}</strong> trabaja con ${tipoAnimales} a nivel ${ambito}.</p>`;
             }
         }
 
-        alert("INFORMACIÓN DE ORGANIZACIONES:\n\n" + mensaje);
+        
+        const popup = window.open("", "InfoOrganizaciones", "width=600,height=400,scrollbars=yes");
+    popup.document.write(`
+        <html>
+            <head>
+                <title>Información de Organizaciones</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px;}
+                    h1 { color: #444; text-align: center; }
+                    .info-org { margin: 15px 0; padding: 10px; }
+                    
+                </style>
+            </head>
+            <body>
+                
+                <div class="info-org">
+                    ${infoHTML}
+                </div>
+                
+            </body>
+        </html>
+    `);
+    popup.document.close();
     }
 
     limpiarTodo() {
         this.donaciones = [];
-        document.getElementById('historial').innerHTML = '<p><i>No hay donaciones registradas</i></p>';
-        document.getElementById('resultado').innerHTML = '<p><i>Aquí aparecerá el resumen de tus donaciones</i></p>';
+        document.getElementById('historial').innerHTML = '<p>No hay donaciones registradas</p>';
+        document.getElementById('resultado').innerHTML = '<p>Aquí aparecerá el resumen de tus donaciones</p>';
 
         const inputs = document.getElementsByClassName('cantidad');
         for (let i = 0; i < inputs.length; i++) {
