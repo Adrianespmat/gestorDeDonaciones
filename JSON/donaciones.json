@@ -5,70 +5,80 @@
             "nombre": "Unicef",
             "tipo": "personas",
             "acogida": false,
-            "rangoEdad": "infancia"
+            "rangoEdad": "infancia",
+            "imagen": "unicef.png"  
         },
         {
             "id": 2,
             "nombre": "Médicos sin fronteras",
             "tipo": "personas", 
             "acogida": true,
-            "rangoEdad": "infancia"
+            "rangoEdad": "infancia",
+            "imagen": "medicos.png" 
         },
         {
             "id": 3,
             "nombre": "GreenPeace",
             "tipo": "animales",
             "multiraza": true,
-            "ambito": "internacional"
+            "ambito": "internacional",
+            "imagen": "greeenpeace.png" 
         },
         {
             "id": 4,
             "nombre": "Cruz Roja",
             "tipo": "personas",
             "acogida": true,
-            "rangoEdad": "infancia"
+            "rangoEdad": "infancia",
+            "imagen": "cruz roja.png" 
         },
         {
             "id": 5,
             "nombre": "Save the Children",
             "tipo": "personas",
             "acogida": false,
-            "rangoEdad": "infancia"
+            "rangoEdad": "infancia",
+            "imagen": "saveChildren.png" 
         },
         {
             "id": 6,
             "nombre": "Amnistía Internacional",
             "tipo": "personas",
             "acogida": false,
-            "rangoEdad": "adolescencia"
+            "rangoEdad": "adolescencia",
+            "imagen": "amnistia.png" 
         },
         {
             "id": 7,
             "nombre": "WWF",
             "tipo": "animales",
             "multiraza": true,
-            "ambito": "internacional"
+            "ambito": "internacional",
+            "imagen": "wwf.png" 
         },
         {
             "id": 8,
             "nombre": "ACNUR",
             "tipo": "personas",
             "acogida": true,
-            "rangoEdad": "infancia"
+            "rangoEdad": "infancia",
+            "imagen": "acbur.png" 
         },
         {
             "id": 9,
             "nombre": "Fundación Vicente Ferrer",
             "tipo": "personas",
             "acogida": false,
-            "rangoEdad": "infancia"
+            "rangoEdad": "infancia",
+            "imagen": "fundacion.png" 
         },
         {
             "id": 10,
             "nombre": "Manos Unidas",
             "tipo": "personas",
             "acogida": true,
-            "rangoEdad": "tercera edad"
+            "rangoEdad": "tercera edad",
+            "imagen": "manosUNidas.jpg" 
         }
     ],
     "tramitesDonacion": []

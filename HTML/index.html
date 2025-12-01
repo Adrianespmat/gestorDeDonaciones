@@ -13,88 +13,101 @@
     <h1>Donaciones Solidarias</h1>
     <p>Haz clic en las imágenes para donar a una organización</p>
 
-
     <div id="panel-lateral">
         <h3>Historial de donaciones</h3>
-        <div id="historial"></div>
+        <div id="historial">
+            <p>No hay donaciones registradas...</p>
+        </div>
     </div>
 
     <div id="organizaciones">
-
-        <div class="org" data-id="1">
-            <img src="../Imagenes/unicef.png" alt="Unicef">
-            <p>Unicef</p>
-            <input type="text" placeholder="Cantidad" class="cantidad">
-        </div>
-
-        <div class="org" data-id="2">
-            <img src="../Imagenes/medicos.png" alt="Médicos sin fronteras">
-            <p>Médicos sin fronteras</p>
-            <input type="text" placeholder="Cantidad" class="cantidad">
-        </div>
-
-        <div class="org" data-id="3">
-            <img src="../Imagenes/greeenpeace.png" alt="GreenPeace">
-            <p>GreenPeace</p>
-            <input type="text" placeholder="Cantidad" class="cantidad">
-        </div>
-
-        <div class="org" data-id="4">
-            <img src="../Imagenes/cruz roja.png" alt="Cruz Roja">
-            <p>Cruz Roja</p>
-            <input type="text" placeholder="Cantidad" class="cantidad">
-        </div>
-
-        <div class="org" data-id="5">
-            <img src="../Imagenes/saveChildren.png" alt="Save the Children">
-            <p>Save the Children</p>
-            <input type="text" placeholder="Cantidad" class="cantidad">
-        </div>
-
-        <div class="org" data-id="6">
-            <img src="../Imagenes/amnistia.png" alt="Amnistía Internacional">
-            <p>Amnistía Internacional</p>
-            <input type="text" placeholder="Cantidad" class="cantidad">
-        </div>
-
-        <div class="org" data-id="7">
-            <img src="../Imagenes/wwf.png" alt="WWF">
-            <p>WWF</p>
-            <input type="text" placeholder="Cantidad" class="cantidad">
-        </div>
-
-        <div class="org" data-id="8">
-            <img src="../Imagenes/acbur.png" alt="ACNUR">
-            <p>ACNUR</p>
-            <input type="text" placeholder="Cantidad" class="cantidad">
-        </div>
-
-        <div class="org" data-id="9">
-            <img src="../Imagenes/fundacion.png" alt="Fundación Vicente Ferrer">
-            <p>Fundación Vicente Ferrer</p>
-            <input type="text" placeholder="Cantidad" class="cantidad">
-        </div>
-
-        <div class="org" data-id="10">
-            <img src="../Imagenes/manosUNidads.jpg" alt="Manos Unidas">
-            <p>Manos Unidas</p>
-            <input type="text" placeholder="Cantidad" class="cantidad">
-        </div>
-
+        <!-- Las organizaciones se generarán aquí desde JavaScript -->
     </div>
 
+    <!-- NUEVO FORMULARIO (PUNTO 3) -->
+    <div id="formulario-container">
+        <h2>Completar datos para la donación</h2>
+        
+        <form id="form-donacion" novalidate>
+            <!-- Grupo: Nombre -->
+            <div class="form-group">
+                <label for="nombre">Nombre *</label>
+                <input type="text" id="nombre" name="nombre" required 
+                       minlength="4" maxlength="15"
+                       placeholder="Introduce tu nombre (4-15 caracteres)">
+            </div>
 
+            <!-- Grupo: Apellidos -->
+            <div class="form-group">
+                <label for="apellidos">Apellidos *</label>
+                <input type="text" id="apellidos" name="apellidos" required
+                       placeholder="Introduce tus apellidos">
+            </div>
 
+            <!-- Grupo: Dirección -->
+            <div class="form-group">
+                <label for="direccion">Dirección *</label>
+                <input type="text" id="direccion" name="direccion" required
+                       placeholder="Introduce tu dirección completa">
+            </div>
 
-    <button onclick="finalizarDonaciones()">Finalizar Donaciones</button>
+            <!-- Grupo: Email -->
+            <div class="form-group">
+                <label for="email">Correo Electrónico *</label>
+                <input type="email" id="email" name="email" required
+                       placeholder="ejemplo@correo.com">
+            </div>
 
+            <!-- Grupo: Método de pago -->
+            <div class="form-group">
+                <label>Método de pago *</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="metodoPago" value="tarjeta" required>
+                        Tarjeta
+                    </label>
+                    <label>
+                        <input type="radio" name="metodoPago" value="transferencia">
+                        Transferencia
+                    </label>
+                </div>
+            </div>
 
-    <div id="resultado">
-        <p><i>Aquí aparecerá el resumen de tus donaciones...</i></p>
+            <!-- Grupo: Tarjeta de socio -->
+            <div class="form-group">
+                <label>¿Tienes tarjeta de socio? *</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="esSocio" value="si" required>
+                        Sí
+                    </label>
+                    <label>
+                        <input type="radio" name="esSocio" value="no">
+                        No
+                    </label>
+                </div>
+            </div>
+
+            <!-- Grupo: Código de socio (aparece dinámicamente) -->
+            <div class="form-group" id="grupo-codigoSocio" style="display: none;">
+                <label for="codigoSocio">Código de socio *</label>
+                <input type="text" id="codigoSocio" name="codigoSocio"
+                       pattern="[A-Za-z]{3}\d{4}[/_#&]{1}"
+                       placeholder="Ej: ABC1234#">
+                <small>Formato: 3 letras + 4 números + uno de estos símbolos: / _ # &</small>
+            </div>
+
+            <!-- Botones -->
+            <div class="form-buttons">
+                <button type="button" id="btn-limpiar">
+                    Limpiar formulario
+                </button>
+                <button type="submit" id="btn-realizar-donacion">
+                    Realizar donación
+                </button>
+            </div>
+        </form>
     </div>
-
-
-
 
 </body>
 
