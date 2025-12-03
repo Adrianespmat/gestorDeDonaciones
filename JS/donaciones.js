@@ -160,6 +160,114 @@ function obtenerNombreImagen(nombreOrg) {
 }
 
 
+
+function configurarEventosFormulario() {
+    const form = document.getElementById('form-donacion');
+    const btnLimpiar = document.getElementById('btn-limpiar');
+    const radiosSocio = document.querySelectorAll('input[name="esSocio"]');
+    const grupoCodigoSocio = document.getElementById('grupo-codigoSocio');
+    const inputCodigoSocio = document.getElementById('codigoSocio');
+    
+    // Mostrar/ocultar campo código socio cuando cambia el radio
+    for (let i = 0; i < radiosSocio.length; i++) {
+        radiosSocio[i].addEventListener('change', function() {
+            if (this.value === 'si') {
+                grupoCodigoSocio.style.display = 'block';
+                inputCodigoSocio.required = true;
+            } else {
+                grupoCodigoSocio.style.display = 'none';
+                inputCodigoSocio.required = false;
+                inputCodigoSocio.value = '';
+            }
+        });
+    }
+    
+    // Botón limpiar formulario (PUNTO 4.1)
+    btnLimpiar.addEventListener('click', function() {
+        form.reset();
+        grupoCodigoSocio.style.display = 'none';
+        inputCodigoSocio.required = false;
+        limpiarErroresFormulario();
+    });
+    
+    // Evento para enviar formulario (se completará en punto 4.2)
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        console.log('Formulario enviado - validación pendiente (punto 4.2)');
+    });
+}
+
+function validarFormularioCompleto() {
+    const errores = [];
+    const form = document.getElementById('form-donacion');
+    
+    // Obtener valores del formulario
+    const nombre = document.getElementById('nombre').value.trim();
+    const apellidos = document.getElementById('apellidos').value.trim();
+    const direccion = document.getElementById('direccion').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const metodoPago = document.querySelector('input[name="metodoPago"]:checked');
+    const esSocio = document.querySelector('input[name="esSocio"]:checked');
+    const codigoSocio = document.getElementById('codigoSocio').value.trim();
+    
+    // 4.2.1. Comprobar que todos los campos estén completos
+    if (!nombre) {
+        errores.push({campo: 'nombre', mensaje: 'El nombre es obligatorio'});
+    }
+    
+    if (!apellidos) {
+        errores.push({campo: 'apellidos', mensaje: 'Los apellidos son obligatorios'});
+    }
+    
+    if (!direccion) {
+        errores.push({campo: 'direccion', mensaje: 'La dirección es obligatoria'});
+    }
+    
+    if (!email) {
+        errores.push({campo: 'email', mensaje: 'El correo electrónico es obligatorio'});
+    }
+    
+    if (!metodoPago) {
+        errores.push({campo: 'metodoPago', mensaje: 'Debes seleccionar un método de pago'});
+    }
+    
+    if (!esSocio) {
+        errores.push({campo: 'esSocio', mensaje: 'Debes indicar si tienes tarjeta de socio'});
+    }
+    
+    // 4.2.3. Validar longitud del nombre (4-15 caracteres)
+    if (nombre && (nombre.length < 4 || nombre.length > 15)) {
+        errores.push({campo: 'nombre', mensaje: 'El nombre debe tener entre 4 y 15 caracteres'});
+    }
+    
+    // 4.2.4. Validar formato de email (usando validación HTML5 + extra)
+    if (email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            errores.push({campo: 'email', mensaje: 'El formato del correo electrónico no es válido'});
+        }
+    }
+    
+    // 4.2.2. Validar código de socio si es socio
+    if (esSocio && esSocio.value === 'si') {
+        if (!codigoSocio) {
+            errores.push({campo: 'codigoSocio', mensaje: 'El código de socio es obligatorio'});
+        } else {
+            // Validar formato: 3 letras + 4 números + símbolo (/ _ # &)
+            const codigoRegex = /^[A-Za-z]{3}\d{4}[\/_#&]{1}$/;
+            if (!codigoRegex.test(codigoSocio)) {
+                errores.push({
+                    campo: 'codigoSocio', 
+                    mensaje: 'Formato de código incorrecto: 3 letras + 4 números + uno de estos símbolos: / _ # &'
+                });
+            }
+        }
+    }
+    
+    return errores;
+}
+
+
 // Configurar eventos de las imágenes Y del formulario
 function configurarEventos() {
     // Eventos para imágenes de organizaciones
@@ -293,6 +401,19 @@ function limpiarTodo() {
     for (let i = 0; i < inputs.length; i++) {
         inputs[i].value = '';
     }
+}
+
+// Función para limpiar errores del formulario (necesaria para punto 4.1)
+function limpiarErroresFormulario() {
+    // Eliminar mensajes de error existentes
+    const errores = document.querySelectorAll('.error-mensaje');
+    errores.forEach(error => error.remove());
+    
+    // Restaurar color normal de labels
+    const labels = document.querySelectorAll('.form-group label');
+    labels.forEach(label => {
+        label.style.color = '';
+    });
 }
 
 // Inicializar cuando se cargue el DOM
