@@ -159,8 +159,7 @@ function obtenerNombreImagen(nombreOrg) {
     return mapeoImagenes[nombreOrg] || `${nombreOrg.toLowerCase().replace(/\s+/g, '_')}.png`;
 }
 
-
-
+// Función para configurar eventos del formulario (PUNTO 3 y 4)
 function configurarEventosFormulario() {
     const form = document.getElementById('form-donacion');
     const btnLimpiar = document.getElementById('btn-limpiar');
@@ -190,76 +189,101 @@ function configurarEventosFormulario() {
         limpiarErroresFormulario();
     });
     
-    // Evento para enviar formulario (se completará en punto 4.2)
+    // Evento para enviar formulario (PUNTO 4.2 y 4.3)
     form.addEventListener('submit', function(event) {
         event.preventDefault();
-        console.log('Formulario enviado - validación pendiente (punto 4.2)');
+        
+        // Limpiar errores anteriores
+        limpiarErroresFormulario();
+        
+        // Validar formulario (PUNTO 4.2)
+        const errores = validarFormularioCompleto();
+        
+        if (errores.length === 0) {
+            // PUNTO 5: Si no hay errores, continuar
+            console.log('Formulario válido - proceder a punto 5');
+            // Aquí llamaremos a procesarDonacionCompleta() más adelante
+        } else {
+            // PUNTO 4.3: Mostrar errores
+            mostrarErrores(errores);
+            // 4.3.3: No continuar con el trámite
+            return false;
+        }
     });
 }
 
+// Función para validar formulario (PUNTO 4.2)
 function validarFormularioCompleto() {
-    const errores = [];
     const form = document.getElementById('form-donacion');
+    const errores = [];
     
-    // Obtener valores del formulario
-    const nombre = document.getElementById('nombre').value.trim();
-    const apellidos = document.getElementById('apellidos').value.trim();
-    const direccion = document.getElementById('direccion').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const metodoPago = document.querySelector('input[name="metodoPago"]:checked');
-    const esSocio = document.querySelector('input[name="esSocio"]:checked');
-    const codigoSocio = document.getElementById('codigoSocio').value.trim();
-    
-    // 4.2.1. Comprobar que todos los campos estén completos
-    if (!nombre) {
-        errores.push({campo: 'nombre', mensaje: 'El nombre es obligatorio'});
-    }
-    
-    if (!apellidos) {
-        errores.push({campo: 'apellidos', mensaje: 'Los apellidos son obligatorios'});
-    }
-    
-    if (!direccion) {
-        errores.push({campo: 'direccion', mensaje: 'La dirección es obligatoria'});
-    }
-    
-    if (!email) {
-        errores.push({campo: 'email', mensaje: 'El correo electrónico es obligatorio'});
-    }
-    
-    if (!metodoPago) {
-        errores.push({campo: 'metodoPago', mensaje: 'Debes seleccionar un método de pago'});
-    }
-    
-    if (!esSocio) {
-        errores.push({campo: 'esSocio', mensaje: 'Debes indicar si tienes tarjeta de socio'});
-    }
-    
-    // 4.2.3. Validar longitud del nombre (4-15 caracteres)
-    if (nombre && (nombre.length < 4 || nombre.length > 15)) {
-        errores.push({campo: 'nombre', mensaje: 'El nombre debe tener entre 4 y 15 caracteres'});
-    }
-    
-    // 4.2.4. Validar formato de email (usando validación HTML5 + extra)
-    if (email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            errores.push({campo: 'email', mensaje: 'El formato del correo electrónico no es válido'});
+    // Usar validación HTML5 como dice el punto 4.2
+    if (!form.checkValidity()) {
+        // Verificar campos importantes
+        const campos = ['nombre', 'apellidos', 'direccion', 'email'];
+        
+        for (let i = 0; i < campos.length; i++) {
+            const campoId = campos[i];
+            const input = document.getElementById(campoId);
+            
+            if (input && !input.validity.valid) {
+                let mensaje = '';
+                
+                if (input.validity.valueMissing) {
+                    mensaje = 'Este campo es obligatorio';
+                } else if (campoId === 'nombre') {
+                    // Verificar longitud del nombre (4-15 caracteres)
+                    if (input.value.length < 4) {
+                        mensaje = 'El nombre debe tener al menos 4 caracteres';
+                    } else if (input.value.length > 15) {
+                        mensaje = 'El nombre no puede tener más de 15 caracteres';
+                    }
+                } else if (campoId === 'email' && input.validity.typeMismatch) {
+                    mensaje = 'El formato del correo electrónico no es válido';
+                }
+                
+                if (mensaje) {
+                    errores.push({
+                        campo: campoId,
+                        mensaje: mensaje
+                    });
+                }
+            }
         }
-    }
-    
-    // 4.2.2. Validar código de socio si es socio
-    if (esSocio && esSocio.value === 'si') {
-        if (!codigoSocio) {
-            errores.push({campo: 'codigoSocio', mensaje: 'El código de socio es obligatorio'});
-        } else {
-            // Validar formato: 3 letras + 4 números + símbolo (/ _ # &)
-            const codigoRegex = /^[A-Za-z]{3}\d{4}[\/_#&]{1}$/;
-            if (!codigoRegex.test(codigoSocio)) {
-                errores.push({
-                    campo: 'codigoSocio', 
-                    mensaje: 'Formato de código incorrecto: 3 letras + 4 números + uno de estos símbolos: / _ # &'
-                });
+        
+        // Verificar método de pago
+        const metodoPago = document.querySelector('input[name="metodoPago"]:checked');
+        if (!metodoPago) {
+            errores.push({
+                campo: 'metodoPago',
+                mensaje: 'Debes seleccionar un método de pago'
+            });
+        }
+        
+        // Verificar tarjeta de socio
+        const esSocio = document.querySelector('input[name="esSocio"]:checked');
+        if (!esSocio) {
+            errores.push({
+                campo: 'esSocio',
+                mensaje: 'Debes indicar si tienes tarjeta de socio'
+            });
+        }
+        
+        // Verificar código de socio si es socio
+        if (esSocio && esSocio.value === 'si') {
+            const codigoSocio = document.getElementById('codigoSocio');
+            if (codigoSocio && !codigoSocio.validity.valid) {
+                if (codigoSocio.validity.valueMissing) {
+                    errores.push({
+                        campo: 'codigoSocio',
+                        mensaje: 'El código de socio es obligatorio'
+                    });
+                } else if (codigoSocio.validity.patternMismatch) {
+                    errores.push({
+                        campo: 'codigoSocio',
+                        mensaje: 'Formato: 3 letras + 4 números + símbolo (/, _, #, &)'
+                    });
+                }
             }
         }
     }
@@ -267,6 +291,45 @@ function validarFormularioCompleto() {
     return errores;
 }
 
+// Función para mostrar errores (PUNTO 4.3)
+function mostrarErrores(errores) {
+    // 4.3.1: Marcar labels en rojo (directamente con JavaScript)
+    for (let i = 0; i < errores.length; i++) {
+        const error = errores[i];
+        const input = document.getElementById(error.campo);
+        
+        if (input) {
+            // Encontrar el label asociado al input
+            const label = input.closest('.form-group').querySelector('label');
+            if (label) {
+                label.style.color = 'red'; // Solo esto, sin CSS
+            }
+        }
+    }
+    
+    // 4.3.2: Mostrar alert con todos los errores
+    let mensajeAlert = 'Por favor, corrige los siguientes errores:\n\n';
+    for (let i = 0; i < errores.length; i++) {
+        mensajeAlert += `• ${errores[i].mensaje}\n`;
+    }
+    
+    alert(mensajeAlert);
+}
+
+// Función para obtener datos del formulario (para PUNTO 5)
+function obtenerDatosFormulario() {
+    const form = document.getElementById('form-donacion');
+    
+    return {
+        nombre: document.getElementById('nombre').value.trim(),
+        apellidos: document.getElementById('apellidos').value.trim(),
+        direccion: document.getElementById('direccion').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        metodoPago: document.querySelector('input[name="metodoPago"]:checked')?.value || '',
+        esSocio: document.querySelector('input[name="esSocio"]:checked')?.value || '',
+        codigoSocio: document.getElementById('codigoSocio')?.value.trim() || ''
+    };
+}
 
 // Configurar eventos de las imágenes Y del formulario
 function configurarEventos() {
@@ -405,15 +468,11 @@ function limpiarTodo() {
 
 // Función para limpiar errores del formulario (necesaria para punto 4.1)
 function limpiarErroresFormulario() {
-    // Eliminar mensajes de error existentes
-    const errores = document.querySelectorAll('.error-mensaje');
-    errores.forEach(error => error.remove());
-    
     // Restaurar color normal de labels
     const labels = document.querySelectorAll('.form-group label');
-    labels.forEach(label => {
-        label.style.color = '';
-    });
+    for (let i = 0; i < labels.length; i++) {
+        labels[i].style.color = ''; // Quitar color rojo
+    }
 }
 
 // Inicializar cuando se cargue el DOM
