@@ -15,7 +15,7 @@ function init() {
         });
 }
 
-// Cargar organizaciones desde json-server (punto 2)
+// Cargar organizaciones desde json-server (PUNTO 1.1 y 1.2)
 function cargarOrganizaciones() {
     return fetch(`${JSON_SERVER_URL}/organizaciones`)
         .then(response => {
@@ -41,7 +41,7 @@ function cargarOrganizaciones() {
         });
 }
 
-// Función para guardar trámite en json-server (punto 2)
+// Función para guardar trámite en json-server (PUNTO 2)
 function guardarTramiteEnServidor(tramite) {
     return fetch(`${JSON_SERVER_URL}/tramitesDonacion`, {
         method: 'POST',
@@ -63,7 +63,6 @@ function guardarTramiteEnServidor(tramite) {
     .catch(error => {
         console.error('Error al guardar el trámite:', error);
         alert('No se pudo guardar el trámite. Verifica que json-server esté funcionando.');
-        // Guardar localmente como respaldo
         guardarTramiteLocalmente(tramite);
         return tramite;
     });
@@ -75,7 +74,6 @@ function guardarTramiteLocalmente(tramite) {
         const tramitesGuardados = JSON.parse(localStorage.getItem('tramitesDonacion') || '[]');
         tramitesGuardados.push(tramite);
         localStorage.setItem('tramitesDonacion', JSON.stringify(tramitesGuardados));
-        console.log('Trámite guardado localmente:', tramite);
     } catch (error) {
         console.error('Error al guardar localmente:', error);
     }
@@ -97,7 +95,7 @@ function crearEstructuraTramite(datosFormulario = null) {
     return tramite;
 }
 
-// Generar las organizaciones en el HTML dinámicamente
+// Generar las organizaciones en el HTML dinámicamente (PUNTO 1.1)
 function generarOrganizacionesHTML() {
     const contenedor = document.getElementById('organizaciones');
     contenedor.innerHTML = '';
@@ -119,7 +117,8 @@ function crearElementoOrganizacion(org) {
     div.className = 'org';
     div.setAttribute('data-id', org.id);
     
-    const nombreImagen = org.imagen || obtenerNombreImagen(org.nombre);
+    // PUNTO 1.2: Usar la imagen del JSON directamente
+    const nombreImagen = org.imagen;
     
     const img = document.createElement('img');
     img.src = `../Imagenes/${nombreImagen}`;
@@ -141,24 +140,6 @@ function crearElementoOrganizacion(org) {
     return div;
 }
 
-// Mapear nombres de organizaciones a nombres de archivo 
-function obtenerNombreImagen(nombreOrg) {
-    const mapeoImagenes = {
-        "Unicef": "unicef.png",
-        "Médicos sin fronteras": "medicos.png",
-        "GreenPeace": "greenpeace.png",
-        "Cruz Roja": "cruz roja.png",
-        "Save the Children": "saveChildren.png",
-        "Amnistía Internacional": "amnistia.png",
-        "WWF": "wwf.png",
-        "ACNUR": "acnur.png",
-        "Fundación Vicente Ferrer": "fundacion.png",
-        "Manos Unidas": "manosUNidads.jpg"
-    };
-    
-    return mapeoImagenes[nombreOrg] || `${nombreOrg.toLowerCase().replace(/\s+/g, '_')}.png`;
-}
-
 // Función para configurar eventos del formulario (PUNTO 3 y 4)
 function configurarEventosFormulario() {
     const form = document.getElementById('form-donacion');
@@ -167,7 +148,7 @@ function configurarEventosFormulario() {
     const grupoCodigoSocio = document.getElementById('grupo-codigoSocio');
     const inputCodigoSocio = document.getElementById('codigoSocio');
     
-    // Mostrar/ocultar campo código socio cuando cambia el radio
+    // Mostrar/ocultar campo código socio (PUNTO 3.6)
     for (let i = 0; i < radiosSocio.length; i++) {
         radiosSocio[i].addEventListener('change', function() {
             if (this.value === 'si') {
@@ -193,20 +174,14 @@ function configurarEventosFormulario() {
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         
-        // Limpiar errores anteriores
         limpiarErroresFormulario();
         
-        // Validar formulario (PUNTO 4.2)
         const errores = validarFormularioCompleto();
         
         if (errores.length === 0) {
-            // PUNTO 5: Si no hay errores, continuar
-            console.log('Formulario válido - proceder a punto 5');
             procesarDonacionValida();
         } else {
-            // PUNTO 4.3: Mostrar errores
             mostrarErrores(errores);
-            // 4.3.3: No continuar con el trámite
             return false;
         }
     });
@@ -217,9 +192,7 @@ function validarFormularioCompleto() {
     const form = document.getElementById('form-donacion');
     const errores = [];
     
-    // Usar validación HTML5 como dice el punto 4.2
     if (!form.checkValidity()) {
-        // Verificar campos importantes
         const campos = ['nombre', 'apellidos', 'direccion', 'email'];
         
         for (let i = 0; i < campos.length; i++) {
@@ -232,13 +205,14 @@ function validarFormularioCompleto() {
                 if (input.validity.valueMissing) {
                     mensaje = 'Este campo es obligatorio';
                 } else if (campoId === 'nombre') {
-                    // Verificar longitud del nombre (4-15 caracteres)
+                    // PUNTO 4.2.3: Longitud nombre entre 4 y 15 caracteres
                     if (input.value.length < 4) {
                         mensaje = 'El nombre debe tener al menos 4 caracteres';
                     } else if (input.value.length > 15) {
                         mensaje = 'El nombre no puede tener más de 15 caracteres';
                     }
                 } else if (campoId === 'email' && input.validity.typeMismatch) {
+                    // PUNTO 4.2.4: Formato email adecuado
                     mensaje = 'El formato del correo electrónico no es válido';
                 }
                 
@@ -251,7 +225,7 @@ function validarFormularioCompleto() {
             }
         }
         
-        // Verificar método de pago
+        // Verificar método de pago (PUNTO 4.2.1)
         const metodoPago = document.querySelector('input[name="metodoPago"]:checked');
         if (!metodoPago) {
             errores.push({
@@ -260,7 +234,7 @@ function validarFormularioCompleto() {
             });
         }
         
-        // Verificar tarjeta de socio
+        // Verificar tarjeta de socio (PUNTO 4.2.1)
         const esSocio = document.querySelector('input[name="esSocio"]:checked');
         if (!esSocio) {
             errores.push({
@@ -269,7 +243,7 @@ function validarFormularioCompleto() {
             });
         }
         
-        // Verificar código de socio si es socio
+        // PUNTO 4.2.2: Validar código de socio si es socio
         if (esSocio && esSocio.value === 'si') {
             const codigoSocio = document.getElementById('codigoSocio');
             if (codigoSocio && !codigoSocio.validity.valid) {
@@ -293,16 +267,15 @@ function validarFormularioCompleto() {
 
 // Función para mostrar errores (PUNTO 4.3)
 function mostrarErrores(errores) {
-    // 4.3.1: Marcar labels en rojo (directamente con JavaScript)
+    // 4.3.1: Marcar labels en rojo
     for (let i = 0; i < errores.length; i++) {
         const error = errores[i];
         const input = document.getElementById(error.campo);
         
         if (input) {
-            // Encontrar el label asociado al input
             const label = input.closest('.form-group').querySelector('label');
             if (label) {
-                label.style.color = 'red'; // Solo esto, sin CSS
+                label.style.color = 'red';
             }
         }
     }
@@ -316,12 +289,8 @@ function mostrarErrores(errores) {
     alert(mensajeAlert);
 }
 
-
-
-// Función para obtener datos del formulario (para PUNTO 5)
+// Función para obtener datos del formulario
 function obtenerDatosFormulario() {
-    const form = document.getElementById('form-donacion');
-    
     return {
         nombre: document.getElementById('nombre').value.trim(),
         apellidos: document.getElementById('apellidos').value.trim(),
@@ -335,47 +304,54 @@ function obtenerDatosFormulario() {
 
 // Función para procesar donación válida (PUNTO 5)
 function procesarDonacionValida() {
-    console.log('Formulario válido - mostrando ventana de confirmación');
-    
-    // Obtener datos del formulario
     const datosFormulario = obtenerDatosFormulario();
-    
-    
-    console.log('Datos del formulario:', datosFormulario);
-    console.log('Total donaciones:', donaciones.length);
-    console.log('Resumen:', generarResumenTexto());
-    console.log('Formulario válido - mostrando ventana de confirmación');
-    
-    
     mostrarVentanaConfirmacion(datosFormulario);
 }
 
-// Función para mostrar ventana de confirmación (PUNTO 5.1 - EXACTO)
+// Función para mostrar ventana de confirmación (PUNTO 5.1)
 function mostrarVentanaConfirmacion(datosFormulario) {
-    // Crear contenido simple
     const contenido = `
-        <h2>Confirmación de Donación</h2>
-        <div style="height: 180px; overflow: auto;">
-            <p><strong>Resumen de donaciones:</strong></p>
-            <div>${generarResumenTexto()}</div>
-        </div>
-        <div style="text-align: center; margin-top: 20px;">
-            <button onclick="window.close()" style="margin-right: 10px;">Volver</button>
-            <button id="btnTerminar" style="margin-left: 10px;">Terminar pedido</button>
-        </div>
-        <script>
-            document.getElementById('btnTerminar').onclick = function() {
-                window.opener.postMessage('terminar-pedido', '*');
-                window.close();
-            };
-        </script>
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Confirmación de Donación</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 20px; }
+                h2 { text-align: center; }
+                .contenido { height: 180px; overflow: auto; margin-bottom: 20px; }
+                .botones { text-align: center; }
+                button { margin: 0 10px; padding: 10px 20px; cursor: pointer; }
+            </style>
+        </head>
+        <body>
+            <h2>Confirmación de Donación</h2>
+            <div class="contenido">
+                <p><strong>Resumen de donaciones:</strong></p>
+                <div>${generarResumenTexto().replace(/<br>/g, '\n')}</div>
+            </div>
+            <div class="botones">
+                <button id="btnVolver">Volver</button>
+                <button id="btnTerminar">Terminar pedido</button>
+            </div>
+            <script>
+                document.getElementById('btnVolver').onclick = function() {
+                    window.close();
+                };
+                
+                document.getElementById('btnTerminar').onclick = function() {
+                    window.opener.postMessage('terminar-pedido', '*');
+                    window.close();
+                };
+            </script>
+        </body>
+        </html>
     `;
     
-    // Abrir ventana (500x300, sin barras)
+    // PUNTO 5.1.1: Ventana 500x300 sin barras de herramientas/direcciones
     const ventana = window.open(
         '', 
         'ConfirmacionDonacion',
-        'width=500,height=300,menubar=no,toolbar=no,location=no,scrollbars=yes'
+        'width=500,height=300,menubar=no,toolbar=no,location=no,scrollbars=yes,resizable=no'
     );
     
     if (ventana) {
@@ -386,7 +362,7 @@ function mostrarVentanaConfirmacion(datosFormulario) {
     }
 }
 
-// Configurar eventos de las imágenes Y del formulario
+// Configurar eventos
 function configurarEventos() {
     // Eventos para imágenes de organizaciones
     setTimeout(() => {
@@ -397,7 +373,6 @@ function configurarEventos() {
         }
     }, 100);
     
-    // Eventos del formulario (PUNTO 3)
     configurarEventosFormulario();
 }
 
@@ -436,7 +411,7 @@ function procesarDonacion(orgElement) {
     input.value = '';
 }
 
-// Actualizar el historial de donaciones
+// Actualizar el historial de donaciones (PUNTO 1.3)
 function actualizarHistorial() {
     const historial = document.getElementById('historial');
     historial.innerHTML = '';
@@ -454,6 +429,7 @@ function actualizarHistorial() {
         historial.appendChild(linea);
     });
     
+    // PUNTO 1.3: Scroll siempre en la última donación
     historial.scrollTop = historial.scrollHeight;
 }
 
@@ -468,7 +444,7 @@ function resaltarLineas(orgId) {
     }
 }
 
-// Función para generar resumen de donaciones
+// Función para generar resumen de donaciones (PUNTO 5.1)
 function generarResumenTexto() {
     if (donaciones.length === 0) {
         return "No hay donaciones";
@@ -504,33 +480,44 @@ function generarResumenTexto() {
     return html;
 }
 
-// Función para mostrar información de organizaciones (PUNTO 1.5)
-function mostrarInfoOrganizaciones() {
-    // Esta función se modificará según lo indicado en puntos posteriores
-    console.log("Función mostrarInfoOrganizaciones() - Se modificará según puntos posteriores del enunciado");
-}
-
-// Función para limpiar todo
-function limpiarTodo() {
-    donaciones = [];
-    document.getElementById('historial').innerHTML = '<p>No hay donaciones registradas...</p>';
-
-    const inputs = document.getElementsByClassName('cantidad');
-    for (let i = 0; i < inputs.length; i++) {
-        inputs[i].value = '';
-    }
-}
-
-// Función para limpiar errores del formulario (necesaria para punto 4.1)
+// Función para limpiar errores del formulario
 function limpiarErroresFormulario() {
-    // Restaurar color normal de labels
     const labels = document.querySelectorAll('.form-group label');
     for (let i = 0; i < labels.length; i++) {
-        labels[i].style.color = ''; // Quitar color rojo
+        labels[i].style.color = '';
     }
 }
 
-// Inicializar cuando se cargue el DOM
+// PUNTO 5.1.4: Manejar mensaje de ventana emergente
+window.addEventListener('message', function(event) {
+    if (event.data === 'terminar-pedido') {
+        const datosFormulario = obtenerDatosFormulario();
+        const tramite = crearEstructuraTramite(datosFormulario);
+        
+        // Guardar trámite (PUNTO 2)
+        guardarTramiteEnServidor(tramite)
+            .then(() => {
+                // Limpiar para nuevo pedido (PUNTO 5.1.4)
+                donaciones = [];
+                document.getElementById('historial').innerHTML = '<p>No hay donaciones registradas...</p>';
+                
+                const inputs = document.getElementsByClassName('cantidad');
+                for (let i = 0; i < inputs.length; i++) {
+                    inputs[i].value = '';
+                }
+                
+                document.getElementById('form-donacion').reset();
+                document.getElementById('grupo-codigoSocio').style.display = 'none';
+                
+                alert('¡Donación realizada con éxito! Puede comenzar un nuevo pedido.');
+            })
+            .catch(error => {
+                alert('Error al guardar la donación. Inténtelo de nuevo.');
+            });
+    }
+});
+
+// Inicializar
 document.addEventListener('DOMContentLoaded', function() {
     init();
 });
