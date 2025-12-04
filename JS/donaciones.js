@@ -202,7 +202,7 @@ function configurarEventosFormulario() {
         if (errores.length === 0) {
             // PUNTO 5: Si no hay errores, continuar
             console.log('Formulario válido - proceder a punto 5');
-            // Aquí llamaremos a procesarDonacionCompleta() más adelante
+            procesarDonacionValida();
         } else {
             // PUNTO 4.3: Mostrar errores
             mostrarErrores(errores);
@@ -310,11 +310,13 @@ function mostrarErrores(errores) {
     // 4.3.2: Mostrar alert con todos los errores
     let mensajeAlert = 'Por favor, corrige los siguientes errores:\n\n';
     for (let i = 0; i < errores.length; i++) {
-        mensajeAlert += `• ${errores[i].mensaje}\n`;
+        mensajeAlert += `${errores[i].mensaje}\n`;
     }
     
     alert(mensajeAlert);
 }
+
+
 
 // Función para obtener datos del formulario (para PUNTO 5)
 function obtenerDatosFormulario() {
@@ -329,6 +331,59 @@ function obtenerDatosFormulario() {
         esSocio: document.querySelector('input[name="esSocio"]:checked')?.value || '',
         codigoSocio: document.getElementById('codigoSocio')?.value.trim() || ''
     };
+}
+
+// Función para procesar donación válida (PUNTO 5)
+function procesarDonacionValida() {
+    console.log('Formulario válido - mostrando ventana de confirmación');
+    
+    // Obtener datos del formulario
+    const datosFormulario = obtenerDatosFormulario();
+    
+    
+    console.log('Datos del formulario:', datosFormulario);
+    console.log('Total donaciones:', donaciones.length);
+    console.log('Resumen:', generarResumenTexto());
+    console.log('Formulario válido - mostrando ventana de confirmación');
+    
+    
+    mostrarVentanaConfirmacion(datosFormulario);
+}
+
+// Función para mostrar ventana de confirmación (PUNTO 5.1 - EXACTO)
+function mostrarVentanaConfirmacion(datosFormulario) {
+    // Crear contenido simple
+    const contenido = `
+        <h2>Confirmación de Donación</h2>
+        <div style="height: 180px; overflow: auto;">
+            <p><strong>Resumen de donaciones:</strong></p>
+            <div>${generarResumenTexto()}</div>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="window.close()" style="margin-right: 10px;">Volver</button>
+            <button id="btnTerminar" style="margin-left: 10px;">Terminar pedido</button>
+        </div>
+        <script>
+            document.getElementById('btnTerminar').onclick = function() {
+                window.opener.postMessage('terminar-pedido', '*');
+                window.close();
+            };
+        </script>
+    `;
+    
+    // Abrir ventana (500x300, sin barras)
+    const ventana = window.open(
+        '', 
+        'ConfirmacionDonacion',
+        'width=500,height=300,menubar=no,toolbar=no,location=no,scrollbars=yes'
+    );
+    
+    if (ventana) {
+        ventana.document.write(contenido);
+        ventana.document.close();
+    } else {
+        alert('Permite ventanas emergentes para continuar');
+    }
 }
 
 // Configurar eventos de las imágenes Y del formulario
