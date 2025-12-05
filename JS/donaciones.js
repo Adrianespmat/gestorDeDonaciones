@@ -3,7 +3,7 @@ let donaciones = [];
 let organizaciones = [];
 const JSON_SERVER_URL = 'http://localhost:3000';
 
-// Función principal de inicialización
+
 function init() {
     cargarOrganizaciones()
         .then(() => {
@@ -11,16 +11,16 @@ function init() {
             configurarEventos();
         })
         .catch(error => {
-            console.error('Error en inicialización:', error);
+            alert('Error al inicializar la aplicación');
         });
 }
 
-// Cargar organizaciones desde json-server (PUNTO 1.1 y 1.2)
+
 function cargarOrganizaciones() {
     return fetch(`${JSON_SERVER_URL}/organizaciones`)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`Error HTTP: ${response.status}`);
             }
             return response.json();
         })
@@ -28,20 +28,19 @@ function cargarOrganizaciones() {
             organizaciones = data;
             
             if (!organizaciones || organizaciones.length === 0) {
-                throw new Error('No se encontraron organizaciones en el servidor');
+                throw new Error('No se encontraron organizaciones');
             }
             
             return organizaciones;
         })
         .catch(error => {
-            console.error('Error al cargar las organizaciones:', error);
-            alert('No se pudieron cargar las organizaciones. Por favor, verifica que json-server esté ejecutándose en http://localhost:3000');
+            alert('NO se pudo cargar');
             organizaciones = [];
             return [];
         });
 }
 
-// Función para guardar trámite en json-server (PUNTO 2)
+
 function guardarTramiteEnServidor(tramite) {
     return fetch(`${JSON_SERVER_URL}/tramitesDonacion`, {
         method: 'POST',
@@ -56,30 +55,25 @@ function guardarTramiteEnServidor(tramite) {
         }
         return response.json();
     })
-    .then(datosGuardados => {
-        console.log('Trámite guardado exitosamente:', datosGuardados);
-        return datosGuardados;
-    })
     .catch(error => {
-        console.error('Error al guardar el trámite:', error);
-        alert('No se pudo guardar el trámite. Verifica que json-server esté funcionando.');
+        alert('No se pudo guardar el trámite');
         guardarTramiteLocalmente(tramite);
         return tramite;
     });
 }
 
-// Función de respaldo: guardar en localStorage
+/
 function guardarTramiteLocalmente(tramite) {
-    try {
+    
         const tramitesGuardados = JSON.parse(localStorage.getItem('tramitesDonacion') || '[]');
         tramitesGuardados.push(tramite);
         localStorage.setItem('tramitesDonacion', JSON.stringify(tramitesGuardados));
-    } catch (error) {
-        console.error('Error al guardar localmente:', error);
-    }
+   
+        
+    
 }
 
-// Función para crear estructura del trámite
+
 function crearEstructuraTramite(datosFormulario = null) {
     const tramite = {
         id: Date.now(),
@@ -95,7 +89,7 @@ function crearEstructuraTramite(datosFormulario = null) {
     return tramite;
 }
 
-// Generar las organizaciones en el HTML dinámicamente (PUNTO 1.1)
+
 function generarOrganizacionesHTML() {
     const contenedor = document.getElementById('organizaciones');
     contenedor.innerHTML = '';
@@ -105,23 +99,20 @@ function generarOrganizacionesHTML() {
         return;
     }
     
-    organizaciones.forEach(org => {
-        const orgElement = crearElementoOrganizacion(org);
+    for (let i = 0; i < organizaciones.length; i++) {
+        const orgElement = crearElementoOrganizacion(organizaciones[i]);
         contenedor.appendChild(orgElement);
-    });
+    }
 }
 
-// Crear un elemento HTML para una organización
+
 function crearElementoOrganizacion(org) {
     const div = document.createElement('div');
     div.className = 'org';
     div.setAttribute('data-id', org.id);
     
-    // PUNTO 1.2: Usar la imagen del JSON directamente
-    const nombreImagen = org.imagen;
-    
     const img = document.createElement('img');
-    img.src = `../Imagenes/${nombreImagen}`;
+    img.src = `../Imagenes/${org.imagen}`;
     img.alt = org.nombre;
     img.title = `Donar a ${org.nombre}`;
     
@@ -140,7 +131,7 @@ function crearElementoOrganizacion(org) {
     return div;
 }
 
-// Función para configurar eventos del formulario (PUNTO 3 y 4)
+
 function configurarEventosFormulario() {
     const form = document.getElementById('form-donacion');
     const btnLimpiar = document.getElementById('btn-limpiar');
@@ -148,7 +139,6 @@ function configurarEventosFormulario() {
     const grupoCodigoSocio = document.getElementById('grupo-codigoSocio');
     const inputCodigoSocio = document.getElementById('codigoSocio');
     
-    // Mostrar/ocultar campo código socio (PUNTO 3.6)
     for (let i = 0; i < radiosSocio.length; i++) {
         radiosSocio[i].addEventListener('change', function() {
             if (this.value === 'si') {
@@ -162,7 +152,6 @@ function configurarEventosFormulario() {
         });
     }
     
-    // Botón limpiar formulario (PUNTO 4.1)
     btnLimpiar.addEventListener('click', function() {
         form.reset();
         grupoCodigoSocio.style.display = 'none';
@@ -170,7 +159,6 @@ function configurarEventosFormulario() {
         limpiarErroresFormulario();
     });
     
-    // Evento para enviar formulario (PUNTO 4.2 y 4.3)
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         
@@ -187,7 +175,7 @@ function configurarEventosFormulario() {
     });
 }
 
-// Función para validar formulario (PUNTO 4.2)
+
 function validarFormularioCompleto() {
     const form = document.getElementById('form-donacion');
     const errores = [];
@@ -205,14 +193,12 @@ function validarFormularioCompleto() {
                 if (input.validity.valueMissing) {
                     mensaje = 'Este campo es obligatorio';
                 } else if (campoId === 'nombre') {
-                    // PUNTO 4.2.3: Longitud nombre entre 4 y 15 caracteres
                     if (input.value.length < 4) {
                         mensaje = 'El nombre debe tener al menos 4 caracteres';
                     } else if (input.value.length > 15) {
                         mensaje = 'El nombre no puede tener más de 15 caracteres';
                     }
                 } else if (campoId === 'email' && input.validity.typeMismatch) {
-                    // PUNTO 4.2.4: Formato email adecuado
                     mensaje = 'El formato del correo electrónico no es válido';
                 }
                 
@@ -225,25 +211,22 @@ function validarFormularioCompleto() {
             }
         }
         
-        // Verificar método de pago (PUNTO 4.2.1)
         const metodoPago = document.querySelector('input[name="metodoPago"]:checked');
         if (!metodoPago) {
             errores.push({
                 campo: 'metodoPago',
-                mensaje: 'Debes seleccionar un método de pago'
+                mensaje: 'Selecciona un método de pago'
             });
         }
         
-        // Verificar tarjeta de socio (PUNTO 4.2.1)
         const esSocio = document.querySelector('input[name="esSocio"]:checked');
         if (!esSocio) {
             errores.push({
                 campo: 'esSocio',
-                mensaje: 'Debes indicar si tienes tarjeta de socio'
+                mensaje: 'Indica si tienes tarjeta de socio'
             });
         }
         
-        // PUNTO 4.2.2: Validar código de socio si es socio
         if (esSocio && esSocio.value === 'si') {
             const codigoSocio = document.getElementById('codigoSocio');
             if (codigoSocio && !codigoSocio.validity.valid) {
@@ -265,9 +248,8 @@ function validarFormularioCompleto() {
     return errores;
 }
 
-// Función para mostrar errores (PUNTO 4.3)
+
 function mostrarErrores(errores) {
-    // 4.3.1: Marcar labels en rojo
     for (let i = 0; i < errores.length; i++) {
         const error = errores[i];
         const input = document.getElementById(error.campo);
@@ -280,7 +262,6 @@ function mostrarErrores(errores) {
         }
     }
     
-    // 4.3.2: Mostrar alert con todos los errores
     let mensajeAlert = 'Por favor, corrige los siguientes errores:\n\n';
     for (let i = 0; i < errores.length; i++) {
         mensajeAlert += `${errores[i].mensaje}\n`;
@@ -289,7 +270,7 @@ function mostrarErrores(errores) {
     alert(mensajeAlert);
 }
 
-// Función para obtener datos del formulario
+
 function obtenerDatosFormulario() {
     return {
         nombre: document.getElementById('nombre').value.trim(),
@@ -302,13 +283,13 @@ function obtenerDatosFormulario() {
     };
 }
 
-// Función para procesar donación válida (PUNTO 5)
+
 function procesarDonacionValida() {
     const datosFormulario = obtenerDatosFormulario();
     mostrarVentanaConfirmacion(datosFormulario);
 }
 
-// Función para mostrar ventana de confirmación (PUNTO 5.1)
+
 function mostrarVentanaConfirmacion(datosFormulario) {
     const contenido = `
         <!DOCTYPE html>
@@ -347,7 +328,6 @@ function mostrarVentanaConfirmacion(datosFormulario) {
         </html>
     `;
     
-    // PUNTO 5.1.1: Ventana 500x300 sin barras de herramientas/direcciones
     const ventana = window.open(
         '', 
         'ConfirmacionDonacion',
@@ -362,9 +342,8 @@ function mostrarVentanaConfirmacion(datosFormulario) {
     }
 }
 
-// Configurar eventos
+
 function configurarEventos() {
-    // Eventos para imágenes de organizaciones
     setTimeout(() => {
         const orgs = document.getElementsByClassName('org');
         for (let i = 0; i < orgs.length; i++) {
@@ -376,10 +355,10 @@ function configurarEventos() {
     configurarEventosFormulario();
 }
 
-// Procesar una donación
+
 function procesarDonacion(orgElement) {
     if (organizaciones.length === 0) {
-        alert('Las organizaciones no se han cargado correctamente. Por favor, recarga la página.');
+        alert('Las organizaciones no se han cargado correctamente.');
         return;
     }
     
@@ -411,7 +390,7 @@ function procesarDonacion(orgElement) {
     input.value = '';
 }
 
-// Actualizar el historial de donaciones (PUNTO 1.3)
+
 function actualizarHistorial() {
     const historial = document.getElementById('historial');
     historial.innerHTML = '';
@@ -421,19 +400,19 @@ function actualizarHistorial() {
         return;
     }
 
-    donaciones.forEach(donacion => {
+    for (let i = 0; i < donaciones.length; i++) {
+        const donacion = donaciones[i];
         const linea = document.createElement('div');
         linea.className = 'linea-historial';
         linea.setAttribute('data-org', donacion.orgId);
         linea.innerHTML = `<strong>${donacion.nombre}</strong> - ${donacion.cantidad.toFixed(2)} €`;
         historial.appendChild(linea);
-    });
+    }
     
-    // PUNTO 1.3: Scroll siempre en la última donación
     historial.scrollTop = historial.scrollHeight;
 }
 
-// Resaltar líneas del historial
+
 function resaltarLineas(orgId) {
     const lineas = document.getElementsByClassName('linea-historial');
     for (let i = 0; i < lineas.length; i++) {
@@ -444,7 +423,7 @@ function resaltarLineas(orgId) {
     }
 }
 
-// Función para generar resumen de donaciones (PUNTO 5.1)
+
 function generarResumenTexto() {
     if (donaciones.length === 0) {
         return "No hay donaciones";
@@ -453,23 +432,25 @@ function generarResumenTexto() {
     const resumen = {};
     let total = 0;
 
-    donaciones.forEach(donacion => {
+    for (let i = 0; i < donaciones.length; i++) {
+        const donacion = donaciones[i];
         if (!resumen[donacion.orgId]) {
             resumen[donacion.orgId] = { nombre: donacion.nombre, total: 0, count: 0 };
         }
         resumen[donacion.orgId].total += donacion.cantidad;
         resumen[donacion.orgId].count++;
         total += donacion.cantidad;
-    });
+    }
 
     let html = '';
     const orgs = Object.values(resumen);
     orgs.sort((a, b) => b.nombre.localeCompare(a.nombre));
 
-    orgs.forEach(org => {
+    for (let i = 0; i < orgs.length; i++) {
+        const org = orgs[i];
         const media = org.total / org.count;
         html += `${org.nombre} --- ${org.count} donaciones --- ${media.toFixed(2)}€ -- ${org.total.toFixed(2)}€<br>`;
-    });
+    }
 
     const totalRedondeado = Math.floor(total * 100) / 100;
     const mediaGeneral = total / donaciones.length;
@@ -480,7 +461,7 @@ function generarResumenTexto() {
     return html;
 }
 
-// Función para limpiar errores del formulario
+
 function limpiarErroresFormulario() {
     const labels = document.querySelectorAll('.form-group label');
     for (let i = 0; i < labels.length; i++) {
@@ -488,16 +469,14 @@ function limpiarErroresFormulario() {
     }
 }
 
-// PUNTO 5.1.4: Manejar mensaje de ventana emergente
+
 window.addEventListener('message', function(event) {
     if (event.data === 'terminar-pedido') {
         const datosFormulario = obtenerDatosFormulario();
         const tramite = crearEstructuraTramite(datosFormulario);
         
-        // Guardar trámite (PUNTO 2)
         guardarTramiteEnServidor(tramite)
             .then(() => {
-                // Limpiar para nuevo pedido (PUNTO 5.1.4)
                 donaciones = [];
                 document.getElementById('historial').innerHTML = '<p>No hay donaciones registradas...</p>';
                 
@@ -508,6 +487,7 @@ window.addEventListener('message', function(event) {
                 
                 document.getElementById('form-donacion').reset();
                 document.getElementById('grupo-codigoSocio').style.display = 'none';
+                limpiarErroresFormulario();
                 
                 alert('¡Donación realizada con éxito! Puede comenzar un nuevo pedido.');
             })
@@ -517,7 +497,7 @@ window.addEventListener('message', function(event) {
     }
 });
 
-// Inicializar
+
 document.addEventListener('DOMContentLoaded', function() {
     init();
 });

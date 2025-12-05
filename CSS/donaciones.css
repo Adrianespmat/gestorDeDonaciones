@@ -1,4 +1,106 @@
 
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f5f8ff;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+h1 {
+    color: darkblue;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+p {
+    margin: 5px 0 20px 0;
+}
+
+
+#organizaciones {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    width: 75%;
+    padding: 20px;
+    box-sizing: border-box;
+    min-height: calc(100vh - 250px); 
+}
+
+
+#panel-lateral {
+    position: fixed;
+    right: 0;
+    top: 120px; 
+    width: 25%;
+    height: calc(100vh - 250px); 
+    background: #e8f4ff;
+    border-left: 2px solid darkblue;
+    box-sizing: border-box;
+    padding: 15px;
+    overflow-y: auto; 
+}
+
+#panel-lateral h3 {
+    margin-top: 0;
+    color: darkblue;
+    text-align: center;
+}
+
+
+#historial {
+    height: calc(100% - 40px); 
+    overflow-y: auto; 
+}
+
+
+.org {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: white;
+    text-align: center;
+    border-radius: 5px;
+    height: 180px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.org img {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.cantidad {
+    width: 80%;
+    padding: 5px;
+    margin-top: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+
+.linea-historial {
+    padding: 10px;
+    margin: 5px 0;
+    border-bottom: 1px solid #ccc;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.linea-destacada {
+    background-color: #fff3cd;
+    border-top: 4px solid #ffc107;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
 #formulario-container {
     width: 80%;
     max-width: 600px;
@@ -7,6 +109,7 @@
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    clear: both; 
 }
 
 #formulario-container h2 {
@@ -102,7 +205,7 @@
     background-color: #5a6268;
 }
 
-/* Estilos para errores (En punto 4) */
+
 .error {
     color: #dc3545;
     font-size: 0.9em;
